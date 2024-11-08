@@ -1,7 +1,7 @@
 // (Routes маршруты) (Route маршрут)
 import { Routes, Route } from 'react-router-dom';
 
-// import { ROUTES } from '../../../utils/routes';
+// import { ROUTES } from '../../utils/routes';
 
 import Home from '../Home/Home';
 

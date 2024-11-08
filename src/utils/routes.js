@@ -2,6 +2,7 @@
 export const ROUTES = {
 	HOME: '/',
 	CART: '/cart',
+	// Когда путь будет динамический то /:id
 	PRODUCT: '/products/:id',
 	CATEGORY: '/categories/:id',
 };
