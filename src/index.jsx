@@ -12,11 +12,15 @@ import App from './components/App/App.jsx';
 import './styles/index.css';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-	<React.StrictMode>
-		<BrowserRouter>
+	// <React.StrictMode>
+		<BrowserRouter
+			future={{
+				v7_relativeSplatPath: true,
+			}}
+		>
 			<Provider store={store}>
 				<App />
 			</Provider>
 		</BrowserRouter>
-	</React.StrictMode>
+	// </React.StrictMode>
 );
