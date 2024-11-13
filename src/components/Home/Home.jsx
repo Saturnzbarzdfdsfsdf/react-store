@@ -20,7 +20,7 @@ const Home = () => {
 		if (list.length > 0) {
 
 			// Передали в функцию фильтрации стоимость
-			dispatch(filteredByPrice(100));
+			dispatch(filteredByPrice(50));
 		}
 	}, [dispatch, list.length, list]);
 
@@ -29,7 +29,7 @@ const Home = () => {
 			<Poster />
 			<Products products={list} amount={5} title='One' />
 			<Categories products={categories} amount={5} title='Two' />
-			<Banner />
+			{/* <Banner /> */}
 			<Products products={filtered} amount={5} title='Three' />
 		</>
 	);

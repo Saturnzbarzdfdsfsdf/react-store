@@ -9,6 +9,8 @@ import { ROUTES } from '../../utils/routes';
 
 import { toggleForm } from '../../redux/user/userSlice';
 
+import { useGetProductsQuery } from '../../redux/api/apiSlice';
+
 // Импорт img
 import LOGO from '../../assets/img/logo.svg';
 import AVATAR from '../../assets/img/avatar.jpg';
@@ -17,29 +19,42 @@ import styles from './Header.module.css';
 
 const Header = () => {
 	const dispatch = useDispatch();
-	const navigate = useNavigate()
+	const navigate = useNavigate();
+
+	const [searchValue, setSearchValue] = useState('');
+	const { data, isLoading } = useGetProductsQuery({ title: searchValue });
 
 	// Исправить
-	const { currentUser } = useSelector(({ user }) => user);
+	const { currentUser, cart } = useSelector(({ user }) => user);
+
+	console.log('cart top in header',cart);
+	
 
 	const [values, setValues] = useState({
 		name: 'Guest',
 		avatar: AVATAR,
 	});
 
-	
 	useEffect(() => {
 		if (!currentUser) return;
 
 		setValues(currentUser);
 	}, [currentUser]);
 
+	// при клике по профилю навигация на профиль
 	const handleClick = () => {
 		if (!currentUser) {
 			dispatch(toggleForm(true));
 		} else {
-			navigate(ROUTES.PROFILE)
+			navigate(ROUTES.PROFILE);
 		}
+	};
+
+		console.log('bool',!!cart.length);
+		console.log('count', cart.length);
+
+	const handleSearch = ({ target: { value } }) => {
+		setSearchValue(value);
 	};
 
 	return (
@@ -70,12 +85,36 @@ const Header = () => {
 							name='search'
 							placeholder='search for anything'
 							autoCapitalize='on'
-							value=''
-							onChange={() => {}}
+							value={searchValue}
+							onChange={handleSearch}
 						/>
 					</div>
 
-					{/* {false && <div className={styles.box}></div>} */}
+					{/*Условный рендеринг результатов поиска*/}
+					{searchValue && (
+						<div className={styles.box}>
+							{isLoading // if
+								? 'Loading' //else if
+								: !data.length //else if
+								? 'No results' //else if
+								: data.map(({ title, images, id }) => {
+										return (
+											<Link
+												onClick={() => setSearchValue('')}
+												className={styles.item}
+												to={`products/${id}`}
+												key={id}
+											>
+												<div
+													className={styles.image}
+													style={{ backgroundImage: `url(${images[0]})` }}
+												></div>
+												<div className={styles.title}>{title}</div>
+											</Link>
+										);
+								  })}
+						</div>
+					)}
 				</form>
 
 				<div className={styles.account}>
@@ -89,7 +128,10 @@ const Header = () => {
 						<svg className={styles['icon-cart']}>
 							<use xlinkHref={'sprite.svg#bag'} />
 						</svg>
-						<span className={styles.count}>64</span>
+						{/* Отображение количества товаров в корзине */}
+						{!!cart.length && (
+							<span className={styles.count}> {cart.length} </span>
+						)}
 					</Link>
 				</div>
 			</div>

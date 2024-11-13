@@ -33,7 +33,7 @@ const Categories = ({ title, products = [], amount }) => {
 
 			<div className={styles.list}>
 				{list.map(({ id, name, image }) => (
-          <Link to={`/categories/${id}`} key={id} className={styles.item}>
+					<Link to={`/categories/${id}`} key={id} className={styles.item}>
 						<div
 							className={styles.image}
 							style={{ backgroundImage: `url(${image})` }}
@@ -42,6 +42,7 @@ const Categories = ({ title, products = [], amount }) => {
 					</Link>
 				))}
 			</div>
+			
 		</section>
 	);
 };

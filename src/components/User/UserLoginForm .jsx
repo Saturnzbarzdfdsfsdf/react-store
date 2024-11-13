@@ -13,17 +13,25 @@ const UserLoginForm = ({ toggleCurrentFormType, closeForm }) => {
 		password: '',
 	});
 
-	const handleChange = ({ target: { value, name } }) => {
-		setValue({ ...values, [name]: value });
+	// Обработка изменений полей ввода
+	const handleChange = event => {
+		// Извлекаем значение и имя поля из события
+		const { value, name } = event.target;
+		// Обновляем состояние, создавая новый объект values
+		setValue(prevValues => ({
+			...prevValues, // Сохраняем предыдущие значения
+			[name]: value, // Обновляем только измененное поле
+		}));
 	};
 
 	const handleSubmit = e => {
 		e.preventDefault();
-
+		// Проверка на заполненность полей
 		const isNotEmpty = Object.values(values).every(val => val);
-
+		// если поля не заполнены, то выйти из кода
 		if (!isNotEmpty) return;
-
+		
+		// если заполнены, то отправляю в redux
 		dispatch(loginUser(values));
 		closeForm();
 	};

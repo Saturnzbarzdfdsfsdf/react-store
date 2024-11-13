@@ -46,7 +46,6 @@ export const loginUser = createAsyncThunk(
 		}
 	}
 );
-
 export const updateUser = createAsyncThunk(
 	'users/updateUser',
 	async (payload, thunkApi) => {
@@ -70,7 +69,6 @@ export const updateUser = createAsyncThunk(
 	}
 );
 
-
 // Убрал дубликаты
 const addCurrentUser = (state, { payload }) => {
 	state.currentUser = payload;
@@ -88,32 +86,37 @@ const userSlice = createSlice({
 		showForm: false,
 		formType: 'signup',
 	},
+
 	reducers: {
 		addItemToCart: (state, { payload }) => {
+			// создали новый массив скопировав текущий массив cart
 			let newCart = [...state.cart];
-			// при добавлении в корзину увеличиваем количество +1 если уже есть такой
-			const foundRepeatedElement = state.cart.find(
-				({ id }) => id === payload.id
-			);
+			// проверяем есть ли уже товар с таким же id
+			const existingItem = state.cart.find(item => item.id === payload.id);
 
-			if (foundRepeatedElement) {
+			// обработка найденного товара
+			if (existingItem) {
+				// обновляем количество товара
 				newCart = newCart.map(item => {
-					return item.id === payload.id
-						? { ...item, quantity: payload.quantity || item.quantity + 1 }
-						: item;
+					return item.id === payload.id // если id совпадает, обновляем количество
+						? { ...item, quantity: item.quantity + 1 }
+						: item; // если id НЕ совпал, то возвращаем без изменений
 				});
-			} else newCart.push({ ...payload, quantity: 1 });
-
+			} else newCart.push({ ...payload, quantity: 1 }); // если товара нет, добавим его
+			// обновим состояние корзины
 			state.cart = newCart;
 		},
-		toggleForm: (state, { payload }) => {
-			state.showForm = payload;
+		removeItemFromCart: (state, { payload }) => {
+			state.cart = state.cart.filter(({ id }) => id !== payload);
 		},
-		toggleFormType: (state, { payload }) => {
-			state.formType = payload;
+		toggleForm: (state, action) => {
+			state.showForm = action.payload;
+		},
+		toggleFormType: (state, action) => {
+			state.formType = action.payload;
 		},
 	},
-
+	// обработка асинхронный действий
 	extraReducers: builder => {
 		builder.addCase(createUser.fulfilled, addCurrentUser);
 		builder.addCase(loginUser.fulfilled, addCurrentUser);
@@ -121,6 +124,9 @@ const userSlice = createSlice({
 	},
 });
 
-export const { addItemToCart, toggleForm, toggleFormType } = userSlice.actions;
+
+
+export const { addItemToCart, toggleForm, toggleFormType, removeItemFromCart } =
+	userSlice.actions;
 
 export default userSlice.reducer;

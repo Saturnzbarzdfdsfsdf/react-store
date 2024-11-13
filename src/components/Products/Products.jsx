@@ -8,7 +8,8 @@ import styles from './Products.module.css';
 const Products = ({ title, style = {}, products = [], amount }) => {
 	// фильтруем наш список продуктов чтобы не превышал amount(количество)
 	const list = products.filter((_, i) => i < amount);
-
+	
+	
 
 	// типизация пропса ( ОПЦИОНАЛЬНО )
 	Products.propTypes = {

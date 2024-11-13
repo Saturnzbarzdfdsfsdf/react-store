@@ -20,9 +20,9 @@ const Sidebar = () => {
 							{/* у NavLink есть isActive если true то вешаем стили */}
 							<NavLink
 								className={({ isActive }) =>
-									`${styles.link} ${isActive ? styles.active : ''}`
+									`${styles.link} ${isActive ? styles.active : ''}`.trim()
 								}
-								to={`/categories${id}`}
+								to={`/categories/${id}`}
 							>
 								{name}
 							</NavLink>

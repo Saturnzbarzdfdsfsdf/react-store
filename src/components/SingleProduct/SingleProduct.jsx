@@ -3,11 +3,13 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 
+// redux api slice
 import { useGetProductQuery } from '../../redux/api/apiSlice';
 import { getRelatedProducts } from '../../redux/products/productsSlice';
 
 import { ROUTES } from '../../utils/routes';
 
+// components
 import { Product, Products } from '../index';
 
 const SingleProduct = () => {
@@ -18,28 +20,31 @@ const SingleProduct = () => {
 	// Позже изменить,  достаю весь продукт
 	const { list, related } = useSelector(({ products }) => products);
 
-	// isLoading, isFetching, isSuccess встроеное в apiSlice
+	// isLoading, isFetching, isSuccess встроено в apiSlice
 	const { data, isLoading, isFetching, isSuccess } = useGetProductQuery({ id });
 
+	// навигация при неуспешной загрузке данных
 	useEffect(() => {
 		if (!isFetching && !isLoading && !isSuccess) {
 			navigate(ROUTES.HOME);
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [isLoading, isFetching, isSuccess]);
+	}, [isLoading, isFetching, isSuccess, navigate]);
 
+	// получение связанных продуктов при успешной загрузке
 	useEffect(() => {
-		if (!data || !list.length) return;
-
-		dispatch(getRelatedProducts(data.category.id));
+		if (data && list.length) {
+			dispatch(getRelatedProducts(data.category.id));
+		}
 	}, [data, dispatch, list.length]);
 
-	return !data ? (
-		<section className='preloader'> loading.. </section>
-	) : (
+	if (!data) {
+		return <section className='preloader'>Loading...</section>;
+	}
+
+	return (
 		<>
 			<Product {...data} />
-			<Products products={related} amount={5} title='Related products' />
+			<Products products={related} amount={5} title='Related Products' />
 		</>
 	);
 };

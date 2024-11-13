@@ -6,4 +6,5 @@ export const ROUTES = {
 	// Когда путь будет динамический то /:id
 	PRODUCT: '/products/:id',
 	CATEGORY: '/categories/:id',
+	
 };

@@ -17,18 +17,19 @@ const UserSighupFrom = ({ toggleCurrentFormType, closeForm }) => {
 			'https://images.panda.org/assets/images/pages/welcome/orangutan_1600x1000_279157.jpg',
 	});
 	
-	
+	// В логине более простая функция на 17 строчке
 	const handleChange = ({ target: { value, name } }) => {
 		setValue({ ...values, [name]: value });
 	};
 
 	const handleSubmit = e => {
 		e.preventDefault();
-
+		// Проверка на заполненность полей
 		const isNotEmpty = Object.values(values).every(val => val);
-
+		// если поля не заполнены, то выйти из кода
 		if (!isNotEmpty) return;
 
+		// если заполнены, то отправляю в redux
 		dispatch(createUser(values));
 		closeForm();
 	};
